@@ -526,6 +526,7 @@ void kiss_process_msg (unsigned char *kiss_msg, int kiss_len, int debug, int cli
 	int cmd;
 	packet_t pp;
 	alevel_t alevel;
+	uint16_t ack = 0;
 
 	port = (kiss_msg[0] >> 4) & 0xf;
 	cmd = kiss_msg[0] & 0xf;
@@ -533,6 +534,7 @@ void kiss_process_msg (unsigned char *kiss_msg, int kiss_len, int debug, int cli
 	switch (cmd) 
 	{
 	  case KISS_CMD_DATA_FRAME:				/* 0 = Data Frame */
+	  case XKISS_CMD_DATA:					/* 12 = ACK mode data frame */
 
 	    /* Special hack - Discard apparently bad data from Linux AX25. */
 
@@ -571,6 +573,14 @@ void kiss_process_msg (unsigned char *kiss_msg, int kiss_len, int debug, int cli
 	      return;
 	    }
 
+	    /* If this is an ACK mode data frame, store the ACK cookie */
+	    if (cmd == XKISS_CMD_DATA) {
+	      /* The first two bytes are the ACK cookie */
+	      memcpy(&ack, kiss_msg + 1, 2);
+	      kiss_len -= 2;
+	      memmove(kiss_msg + 1, kiss_msg + 3, kiss_len - 1);
+	    }
+
 	    memset (&alevel, 0xff, sizeof(alevel));
 	    pp = ax25_from_frame (kiss_msg+1, kiss_len-1, alevel);
 	    if (pp == NULL) {
@@ -578,6 +588,9 @@ void kiss_process_msg (unsigned char *kiss_msg, int kiss_len, int debug, int cli
 	       dw_printf ("ERROR - Invalid KISS data frame from client app.\n");
 	    }
 	    else {
+
+	      /* Store the transmit state and client state in this frame */
+	      ax25_set_ackmode_fields(pp, cmd, client, ack);
 
 	      /* How can we determine if it is an original or repeated message? */
 	      /* If there is at least one digipeater in the frame, AND */
@@ -880,7 +893,7 @@ void kiss_debug_print (fromto_t fromto, char *special, unsigned char *pmsg, int 
 		"Data frame",	"TXDELAY",	"P",		"SlotTime",
 		"TXtail",	"FullDuplex",	"SetHardware",	"Invalid 7",
 		"Invalid 8", 	"Invalid 9",	"Invalid 10",	"Invalid 11",
-		"Invalid 12", 	"Invalid 13",	"Invalid 14",	"Return" };
+		"ACKmode", 	"Invalid 13",	"Invalid 14",	"Return" };
 #endif
 
 	text_color_set(DW_COLOR_DEBUG);

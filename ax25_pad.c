@@ -2818,5 +2818,12 @@ int ax25_alevel_to_text (alevel_t alevel, char text[AX25_ALEVEL_TO_TEXT_SIZE])
 
 } /* end ax25_alevel_to_text */
 
+int ax25_set_ackmode_fields(packet_t packet, unsigned char cmd, int client, unsigned short ack)
+{
+	packet->kiss_cmd = cmd;
+	packet->client = client;
+	packet->ack = ack;
+	return (1);
+}
 
 /* end ax25_pad.c */

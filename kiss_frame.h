@@ -17,7 +17,7 @@
 #define KISS_CMD_TXTAIL		4
 #define KISS_CMD_FULLDUPLEX	5
 #define KISS_CMD_SET_HARDWARE	6
-#define XKISS_CMD_DATA		12	// Not supported. http://he.fi/pub/oh7lzb/bpq/multi-kiss.pdf
+#define XKISS_CMD_DATA		12	// ACK Mode data transmit / response
 #define XKISS_CMD_POLL		14	// Not supported.
 #define KISS_CMD_END_KISS	15
 

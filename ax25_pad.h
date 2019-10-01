@@ -142,6 +142,11 @@ struct packet_s {
 				
 
 	int magic2;		/* Will get stomped on if above overflows. */
+
+	/* ACKMODE support */
+	int client;		/* client ID to send ACK to */
+	unsigned char kiss_cmd;	/* Which KISS command byte to use - 0 for DATA, 12 for ACKMODE data */
+	unsigned short ack;	/* ACK cookie to use when completing a transmit */
 };
 
 
@@ -438,6 +443,7 @@ extern void ax25_safe_print (char *, int, int ascii_only);
 #define AX25_ALEVEL_TO_TEXT_SIZE 32	// overkill but safe.
 extern int ax25_alevel_to_text (alevel_t alevel, char text[AX25_ALEVEL_TO_TEXT_SIZE]);
 
+extern int ax25_set_ackmode_fields(packet_t packet, unsigned char cmd, int client, unsigned short ack);
 
 #endif /* AX25_PAD_H */
 

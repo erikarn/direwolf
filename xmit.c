@@ -786,6 +786,9 @@ static void xmit_ax25_frames (int chan, int prio, packet_t pp, int max_bundle)
 	text_color_set(DW_COLOR_DEBUG);
 	dw_printf ("xmit_thread: flen=%d, nb=%d, num_bits=%d, numframe=%d\n", flen, nb, num_bits, numframe);
 #endif
+
+	/* XXX TODO: populate ackmode outbound notification here */
+
 	ax25_delete (pp);
 
 /*
@@ -837,6 +840,9 @@ static void xmit_ax25_frames (int chan, int prio, packet_t pp, int max_bundle)
 	        text_color_set(DW_COLOR_DEBUG);
 	        dw_printf ("xmit_thread: flen=%d, nb=%d, num_bits=%d, numframe=%d\n", flen, nb, num_bits, numframe);
 #endif
+
+		/* XXX TODO: populate ackmode outbound notification here */
+
 	        ax25_delete (pp);
 
 	        break;
@@ -919,6 +925,8 @@ static void xmit_ax25_frames (int chan, int prio, packet_t pp, int max_bundle)
 #endif
 		
 	ptt_set (OCTYPE_PTT, chan, 0);
+
+	// TODO: send any ackmode acks that have been pending here
 
 } /* end xmit_ax25_frames */
 
