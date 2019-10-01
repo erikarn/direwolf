@@ -511,7 +511,10 @@ static THREAD_F connect_listen_thread (void *arg)
 
 
 
-
+void kissnet_send_ackmode_ack (int chan, int kiss_cmd, unsigned short ack_cookie, int tcpclient)
+{
+	kissnet_send_rec_packet(chan, kiss_cmd, (unsigned char *) &ack_cookie, 2, tcpclient);
+}
 
 /*-------------------------------------------------------------------
  *

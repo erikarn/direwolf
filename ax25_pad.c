@@ -2826,4 +2826,19 @@ int ax25_set_ackmode_fields(packet_t packet, unsigned char cmd, int client, unsi
 	return (1);
 }
 
+unsigned char ax25_get_tx_kisscmd(packet_t packet)
+{
+	return packet->kiss_cmd;
+}
+
+int ax25_get_tx_client(packet_t packet)
+{
+	return packet->client;
+}
+
+unsigned short ax25_get_tx_ack_cookie(packet_t packet)
+{
+	return packet->ack;
+}
+
 /* end ax25_pad.c */

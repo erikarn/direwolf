@@ -717,6 +717,21 @@ static void * xmit_thread (void *arg)
  *
  *--------------------------------------------------------------------*/
 
+static void
+xmit_ax25_complete_packet(int chan, packet_t pp)
+{
+	unsigned char kiss_cmd;
+	int client;
+	unsigned short ack_cookie;
+
+	kiss_cmd = ax25_get_tx_kisscmd(pp);
+	if (kiss_cmd == 12) { // XXX XKISS_CMD_DATA
+		ack_cookie = ax25_get_tx_ack_cookie(pp);
+		client = ax25_get_tx_client(pp);
+
+		kissnet_send_ackmode_ack(chan, kiss_cmd, ack_cookie, client);
+	}
+}
 
 static void xmit_ax25_frames (int chan, int prio, packet_t pp, int max_bundle)
 {
@@ -787,7 +802,7 @@ static void xmit_ax25_frames (int chan, int prio, packet_t pp, int max_bundle)
 	dw_printf ("xmit_thread: flen=%d, nb=%d, num_bits=%d, numframe=%d\n", flen, nb, num_bits, numframe);
 #endif
 
-	/* XXX TODO: populate ackmode outbound notification here */
+	xmit_ax25_complete_packet (chan, pp);
 
 	ax25_delete (pp);
 
@@ -841,7 +856,7 @@ static void xmit_ax25_frames (int chan, int prio, packet_t pp, int max_bundle)
 	        dw_printf ("xmit_thread: flen=%d, nb=%d, num_bits=%d, numframe=%d\n", flen, nb, num_bits, numframe);
 #endif
 
-		/* XXX TODO: populate ackmode outbound notification here */
+		xmit_ax25_complete_packet(chan, pp);
 
 	        ax25_delete (pp);
 
@@ -925,8 +940,6 @@ static void xmit_ax25_frames (int chan, int prio, packet_t pp, int max_bundle)
 #endif
 		
 	ptt_set (OCTYPE_PTT, chan, 0);
-
-	// TODO: send any ackmode acks that have been pending here
 
 } /* end xmit_ax25_frames */
 

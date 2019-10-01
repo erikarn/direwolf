@@ -13,6 +13,8 @@
 
 void kissnet_init (struct misc_config_s *misc_config);
 
+void kissnet_send_ackmode_ack (int chan, int kiss_cmd, unsigned short ack_cookie, int tcpclient);
+
 void kissnet_send_rec_packet (int chan, int kiss_cmd, unsigned char *fbuf,  int flen, int client);
 
 void kiss_net_set_debug (int n);

@@ -444,6 +444,9 @@ extern void ax25_safe_print (char *, int, int ascii_only);
 extern int ax25_alevel_to_text (alevel_t alevel, char text[AX25_ALEVEL_TO_TEXT_SIZE]);
 
 extern int ax25_set_ackmode_fields(packet_t packet, unsigned char cmd, int client, unsigned short ack);
+extern unsigned char ax25_get_tx_kisscmd(packet_t packet);
+extern int ax25_get_tx_client(packet_t packet);
+extern unsigned short ax25_get_tx_ack_cookie(packet_t packet);
 
 #endif /* AX25_PAD_H */
 
