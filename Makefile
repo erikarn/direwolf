@@ -6,11 +6,14 @@
 
 win := $(shell uname | grep CYGWIN)
 dar := $(shell uname | grep Darwin)
+freebsd := $(shell uname | grep FreeBSD)
 
 ifneq ($(win),)
    include Makefile.win
 else ifeq ($(dar),Darwin)
    include Makefile.macosx
+else ifeq ($(freebsd),FreeBSD)
+   include Makefile.FreeBSD
 else
    include Makefile.linux
 endif
